@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mini-banking-cluster"
+version = "0.7.0"
+description = "Two-node banking API backed by a distributed YSQL database"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.143.3,<0.147",
+  "httpx2>=2.16,<3",
+  "psycopg[binary]>=3.2,<4",
+  "pydantic>=2.9,<3",
+  "pydantic-settings>=2.4,<3",
+  "python-json-logger>=2,<5",
+  "sqlalchemy>=2.0,<3",
+  "typer>=0.12,<1",
+  "uvicorn>=0.30,<1",
+]
+
+[project.scripts]
+banking-api = "banking.__main__:main"
+banking-cli = "client.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.9,<1", "pyright>=1.1,<2", "pre-commit>=4,<5"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/banking", "src/client"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+markers = [
+  "cluster: requires explicitly configured, disposable YugabyteDB test database",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+exclude = [".venv", ".git", "**/__pycache__"]
+extraPaths = ["src", "."]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"
