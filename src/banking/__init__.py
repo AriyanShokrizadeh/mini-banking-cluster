@@ -1,0 +1,1 @@
+"""Mini Banking Cluster package."""
