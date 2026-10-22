@@ -1,0 +1,18 @@
+[Unit]
+Description=Mini Banking Cluster API
+Wants=network-online.target
+After=network-online.target yugabyted.service
+
+[Service]
+Type=simple
+User=banking
+Group=banking
+WorkingDirectory=/opt/mini-banking-releases
+EnvironmentFile=/etc/mini-banking/banking.env
+ExecStart=/opt/mini-banking-releases/.venv/bin/python -m banking
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+[Unit]
+Description=YugabyteDB YB-Master and YB-TServer (yugabyted)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=yugabyte
+Group=yugabyte
+EnvironmentFile=/etc/mini-banking/yugabyted.env
+ExecStart=/usr/local/libexec/mini-banking/start-yugabyted.sh
+ExecStop=/opt/yugabyte/current/bin/yugabyted stop --base_dir=${YB_BASE_DIR}
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=360
+TimeoutStopSec=180
+LimitNOFILE=1048576
+LimitNPROC=12000
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
